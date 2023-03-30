@@ -7,8 +7,8 @@ attribute vec2 vertex_tex_coords;
 // Per-vertex outputs passed on to the fragment shader
 
 /* #TODO GL3.3.1: Pass on the normals and fragment position in camera coordinates */
-//varying ...
-//varying ...
+varying vec3 frag_pos;
+varying vec3 cam_coords;
 varying vec2 v2f_uv;
 
 // Global variables specified in "uniforms" entry of the pipeline
