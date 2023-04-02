@@ -6,10 +6,11 @@ attribute vec2 vertex_tex_coords;
 
 // Per-vertex outputs passed on to the fragment shader
 
-/* #TODO GL3.3.1: Pass on the normals and fragment position in camera coordinates */
-varying vec3 frag_pos;
-varying vec3 cam_coords;
+//varying ...
+//varying ...
 varying vec2 v2f_uv;
+varying vec3 frag_pos;
+varying vec3 normal;
 
 // Global variables specified in "uniforms" entry of the pipeline
 uniform mat4 mat_mvp;
@@ -31,7 +32,12 @@ void main() {
 	// viewing vector (from camera to vertex in view coordinates), camera is at vec3(0, 0, 0) in cam coords
 	// vertex position in camera coordinates
 	// transform normal to camera coordinates
+
+	frag_pos = vec3(mat_model_view * vec4(vertex_position, 1));
+	normal = normalize(mat_normals_to_view * vertex_normal);
+
+	v2f_uv = vertex_tex_coords;
 	
-	gl_Position = vec4(vertex_position, 1);
+	gl_Position = mat_mvp * vec4(vertex_position, 1);
 
 }
