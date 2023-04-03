@@ -56,18 +56,19 @@ void main() {
 	vec3 direction_to_light = normalize(light_position - frag_pos);
 	float distance_to_light = length(light_position - frag_pos);
 
-	vec3 light_color = light_color / (distance_to_light * distance_to_light);
+
+	vec3 light_color_scaled = light_color / (distance_to_light * distance_to_light);
 
 	vec3 norm_normal = normalize(normal);
-	vec3 norm_direction_to_light =  direction_to_light;
-	vec3 norm_direction_to_camera = direction_to_camera;
+	vec3 norm_direction_to_light = normalize(direction_to_light);
+	vec3 norm_direction_to_camera = normalize(direction_to_camera);
 
-	vec3 diffuse = light_color * material_color * dot(norm_normal, norm_direction_to_light);
+	vec3 diffuse = light_color_scaled * material_color * dot(norm_normal, norm_direction_to_light);
 
 	vec3 specular_blinn;
 	vec3 half_vector = normalize(norm_direction_to_light + norm_direction_to_camera);
 	
-	specular_blinn = light_color *  material_color * pow(dot(norm_normal, half_vector), material_shininess);
+	specular_blinn = light_color_scaled *  material_color * pow(dot(norm_normal, half_vector), material_shininess);
 	vec3 blinn_light = diffuse + specular_blinn;
 
 	if(dot(norm_normal, norm_direction_to_light) < 0.)
@@ -77,13 +78,15 @@ void main() {
 	else
 		color = blinn_light;
 
-	//shadow
-	vec4 distance_shadow_map = textureCube(cube_shadowmap, direction_to_light);	
+	// shadow mapping
+	
+	float distance_shadow_map = textureCube(cube_shadowmap, frag_pos - light_position).x;
 
-	if(distance_to_light > distance_shadow_map.x * 1.01)
+
+	if(distance_to_light > distance_shadow_map * 1.01)
 		color = vec3(0., 0., 0.);
 		
 	float material_ambient = 0.1;
-	color += light_color * material_ambient * material_color;
+	color += light_color_scaled * material_ambient * material_color;
 	gl_FragColor = vec4(color, 1.); // output: RGBA in 0..1 range
 }
