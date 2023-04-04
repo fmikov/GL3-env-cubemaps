@@ -80,8 +80,8 @@ void main() {
 
 	// shadow mapping
 	
-	float distance_shadow_map = textureCube(cube_shadowmap, frag_pos - light_position).x;
-
+	float distance_shadow_map = textureCube(cube_shadowmap, normalize(frag_pos-light_position)).x;
+	
 
 	if(distance_to_light > distance_shadow_map * 1.01)
 		color = vec3(0., 0., 0.);
