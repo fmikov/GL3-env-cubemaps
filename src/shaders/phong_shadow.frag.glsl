@@ -52,9 +52,9 @@ void main() {
 	*/
 	vec3 color = vec3(0., 0., 0.);
 
-	vec3 direction_to_camera = normalize(-frag_pos);
+	vec3 direction_to_camera = -normalize(frag_pos);
 	vec3 direction_to_light = normalize(light_position - frag_pos);
-	float distance_to_light = length(light_position - frag_pos);
+	float distance_to_light = length(frag_pos - light_position);
 
 
 	vec3 light_color_scaled = light_color / (distance_to_light * distance_to_light);
@@ -78,12 +78,12 @@ void main() {
 	else
 		color = blinn_light;
 
+
 	// shadow mapping
 	
-	float distance_shadow_map = textureCube(cube_shadowmap, normalize(frag_pos-light_position)).x;
-	
+	float distance_shadow_map = textureCube(cube_shadowmap, frag_pos-light_position).x;
 
-	if(distance_to_light > distance_shadow_map * 1.01)
+	if(distance_to_light > (distance_shadow_map * 1.01))
 		color = vec3(0., 0., 0.);
 		
 	float material_ambient = 0.1;

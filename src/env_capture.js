@@ -87,7 +87,7 @@ export class EnvironmentCapture {
     // please use mat4.perspective(mat4.create(), fovy, aspect, near, far);
     this.cube_camera_projection = mat4.perspective(
       mat4.create(),
-      Math.tan(Math.PI * 0.5 - 0.5 * 45),
+      Math.PI / 2,
       1,
       0.1,
       200
